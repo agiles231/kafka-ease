@@ -1,0 +1,4 @@
+#!/bin/bash
+. ./config;
+
+$kafka_home/bin/zookeeper-shell.sh $zookeeper_url $@

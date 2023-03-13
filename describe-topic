@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./kafka-cmd kafka-topics.sh --describe --topic "${1:-dummy_topic}"

@@ -1,0 +1,4 @@
+#!/bin/bash
+
+all_topics_desc=$(./describe-all-topics | grep 'Topic: .*PartitionCount: .*$');
+echo "$all_topics_desc" | tr '\t' ' ' | tr -s ' ' | cut -d ' ' -f 1,2,3,4 | column -t;

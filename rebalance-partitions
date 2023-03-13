@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Generically rebalance all topics' partitions across all brokers in cluster
+#
+
+# Get brokers from zookeeper
+broker_list=$(./connect-zookeeper "ls /brokers/ids" | tail -1 | sed 's/[] []//g') # use zookeeper to get brokers list
+
+# Generate topics json
+topics_json_start='{ "topics": [';
+topics=$(./list-topics)
+topics_json=$(echo "$topics" | tail -n+2 | sed 's/^\(.*\)$/{ "topic": "\1"}/' | tr '\n' ',' | sed '$s/,$/\n/')
+topics_json_end=']}';
+topics_full_json="$topics_json_start $topics_json $topics_json_end";
+#topics_full_json='{ "topics": [ { "topic": "dummy-topic"} ] }';
+
+# Diagnostic output
+echo $broker_list;
+echo $topics_full_json;
+
+# Json file names
+topic_json_file="topics.json"
+proposed_reassignment_json_file="prepared_reassignment.json"
+just_assigned_json_file="inprogress_assignment.json"
+current_assignment_json_file="current_assignment.json"
+
+# Output topics to file for `generate` command
+echo "$topics_full_json" > $topic_json_file;
+
+# Generate current and proposed partition mappings
+current_and_proposed=$(./my-kafka kafka-reassign-partitions.sh --generate --broker-list "$broker_list" --topics-to-move-json-file "$topic_json_file")
+
+# Separate current and proposed partition mapping json
+echo "$current_and_proposed" | sed -n '/Proposed partition reassignment configuration/,$p' | tail -n+2 > $proposed_reassignment_json_file
+echo "$current_and_proposed" | sed 's/Proposed partition reassignment configuration.*//g' | tail -n+2 > $current_assignment_json_file
+
+# Execute reassignment
+./kafka-cmd kafka-reassign-partitions.sh --execute --reassignment-json-file "$proposed_reassignment_json_file" # > $current_assignment_json_file

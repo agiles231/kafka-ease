@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./kafka-cmd kafka-topics.sh --list

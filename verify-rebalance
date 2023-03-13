@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Verify reassignment
+proposed_reassignment_json_file="prepared_reassignment.json"
+reassignment_results_json=reassignment_results.json
+./kafka-cmd kafka-reassign-partitions.sh --verify --reassignment-json-file "$proposed_reassignment_json_file" | tr '\t' ' ' | tr -s ' ' | cut -d ' ' -f 4- | sed 's/\bis\b//g' | sed 's/complete\./Complete/g' | column -t > $reassignment_results_json
+cat $reassignment_results_json;

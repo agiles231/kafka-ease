@@ -1,0 +1,5 @@
+#!/bin/bash
+
+kafka_home=".";
+bootstrap_server_url="";
+zookeeper_url=""
