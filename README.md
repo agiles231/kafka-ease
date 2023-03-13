@@ -3,11 +3,11 @@ Kafka Ease provides scripts that improve user experience by avoiding duplicate b
 Additionally, some scripts simplify common operational processes, or report data in a desired format.
 
 * `rebalance-partitions`: Rebalance partitions
-* `verify-rebalance`: Verify that rebalance is successful
-* `create-topic`: Create a topic
-* `list-topics`: List all topics
-* `describe-topic`: Describe a topic
-* `describe-all-topics`: Describe all topics
+* `verify-rebalance`: Verify that rebalance is successful. Will use the file generated from `rebalance-partitions` to identify the rebalance, therefore you cannot run another rebalance if you wish to use this to verify
+* `create-topic <topic_name> <partitions> [OPTIONS]`: Create a topic. OPTIONS are passed to `kafka-topics.sh` script that comes with kafka.
+* `list-topics [OPTIONS]`: List all topics. OPTIONS are passed to `kafka-topics.sh` script that comes with kafka.
+* `describe-topic <topic_name> [OPTIONS]`: Describe a topic. OPTIONS are passed to `kafka-topics.sh` script that comes with kafka.
+* `describe-all-topics [OPTIONS]`: Describe all topics. OPTIONS are passed to `kafka-topics.sh` script that comes with kafka.
 * `get-all-topic-partition-count`: List partition counts for all topics
 
 Additionally, two scripts are helper scripts:
